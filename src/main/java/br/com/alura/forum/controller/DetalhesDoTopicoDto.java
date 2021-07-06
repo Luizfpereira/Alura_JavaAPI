@@ -1,28 +1,32 @@
 package br.com.alura.forum.controller;
 
+import br.com.alura.forum.modelo.StatusTopico;
 import br.com.alura.forum.modelo.Topico;
-import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TopicoDto {
+public class DetalhesDoTopicoDto {
 
     private Long id;
     private String titulo;
     private String mensagem;
     private LocalDateTime dataCriacao;
+    private String nomeAutor;
+    private StatusTopico status;
+    private List<RespostaDto> respostas;
 
-    public TopicoDto(Topico topico){
+    public DetalhesDoTopicoDto(Topico topico) {
         this.id = topico.getId();
         this.titulo = topico.getTitulo();
         this.mensagem = topico.getMensagem();
         this.dataCriacao = topico.getDataCriacao();
-    }
-
-    public static Page<TopicoDto> converter(Page<Topico> topicos) {
-        return topicos.map(TopicoDto::new);
+        this.nomeAutor = topico.getAutor().getNome();
+        this.status = topico.getStatus();
+        this.respostas = new ArrayList<>();
+        this.respostas.addAll(topico.getRespostas().stream().map(RespostaDto::new).collect(Collectors.toList()));
     }
 
     public Long getId() {
@@ -41,7 +45,15 @@ public class TopicoDto {
         return dataCriacao;
     }
 
+    public String getNomeAutor() {
+        return nomeAutor;
+    }
 
+    public StatusTopico getStatus() {
+        return status;
+    }
 
-
+    public List<RespostaDto> getRespostas() {
+        return respostas;
+    }
 }
